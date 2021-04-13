@@ -10,14 +10,12 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -34,10 +32,10 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
+
 public class MainActivity extends AppCompatActivity {
     private static final int FROM_ALBUM = 1;
     private static final int FROM_CAMERA = 2;
-    static final int PIXEL_WIDTH = 48;
     Button detect;
     ImageView iv;
     Bitmap bmp;
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //분석버튼
+        //분석버튼 -> onActivityResult에 detectEmotion() 넣으면 클릭없이 분석
         detect = (Button) findViewById(R.id.detect);
         detect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,25 +185,12 @@ public class MainActivity extends AppCompatActivity {
 
         resizedImage.getPixels(pixelarray, 0, resizedImage.getWidth(), 0, 0, resizedImage.getWidth(), resizedImage.getHeight());
 
-
-        float normalized_pixels [] = new float[pixelarray.length];
-        for (int i=0; i < pixelarray.length; i++) {
-            int pix = pixelarray[i];
-            int b = pix & 0xff;
-            normalized_pixels[i] = (float)(b);
-
-        }
-        System.out.println(normalized_pixels);
-        Log.d("pixel_values",String.valueOf(normalized_pixels));
-        String text=null;
-
-
         float[][][][] bytes_img = new float[1][48][48][1];
 
         for(int y = 0; y < 48; y++) {
             for (int x = 0; x < 48; x++) {
                 int pixel = resizedImage.getPixel(x, y);
-                bytes_img[0][x][y][0] = (pixel & 0xff) / (float) 255;
+                bytes_img[0][y][x][0] = (pixel & 0xff) / (float) 255;
             }
         }
 
